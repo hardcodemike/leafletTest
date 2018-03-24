@@ -19,6 +19,7 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 }).addTo( mymap );
 var marker = L.marker([47.583807, 12.1736679]).bindPopup("test").addTo(mymap); //geolocation
+var markerTwo = L.marker([47.5839, 12.1736679]).bindPopup("test2").addTo(mymap);
 
 map.locate({setView: true, minZoom: 18, maxZoom: 18});
 
