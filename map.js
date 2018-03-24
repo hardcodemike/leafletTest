@@ -11,7 +11,7 @@ mymap.keyboard.disable();
 if (mymap.tap) mymap.tap.disable();
 document.getElementById('mapid').style.cursor = 'default';
 
-
+mymap.removeControl(mymap.zoomControl);
 /*end lock map */
 
 
