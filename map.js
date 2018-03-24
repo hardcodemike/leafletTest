@@ -41,10 +41,28 @@ mymap.removeControl(mymap.zoomControl);
 // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 //   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 // }).addTo(mymap); //auswahl der verschiedenen Maps
-var ign = new L.tileLayer("http://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
-    subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
-    attribution: '&copy; <a href="http://basemap.at">Basemap.at</a>, <a href="http://www.isticktoit.net">isticktoit.net</a>'
+// var ign = new L.tileLayer("http://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
+//     subdomains : ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+//     attribution: '&copy; <a href="http://basemap.at">Basemap.at</a>, <a href="http://www.isticktoit.net">isticktoit.net</a>'
+// });
+
+//var ign = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+//	attribution: '',
+//	subdomains: 'abcd',
+//	minZoom: 18,
+//	maxZoom: 18,
+//	ext: 'png'
+//});
+
+var ign = L.tileLayer('https://maps{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.{format}', {
+	maxZoom: 18,
+	attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
+	subdomains: ["", "1", "2", "3", "4"],
+	format: 'jpeg',
+	//bounds: [[46.35877, 8.782379], [49.037872, 17.189532]]
 });
+
+
 
 mymap.addLayer(ign);
 
