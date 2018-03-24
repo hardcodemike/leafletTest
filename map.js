@@ -1,3 +1,10 @@
+// if('serviceWorker' in navigator) {
+//     navigator.serviceWorker .register('/sw.js')
+//     .then(function() { console.log("Service Worker Registered"); });
+// } 
+
+
+
 var mymap = L.map('mapid').setView([47.583807, 12.1736679], 18); 
 //var map = L.map('map').setView([45.8167, 15.9833], 10);
 
@@ -40,31 +47,52 @@ var ign = new L.tileLayer("http://{s}.wien.gv.at/basemap/geolandbasemap/normal/g
 });
 
 mymap.addLayer(ign);
-// TODO auf basemaps
+
+var marker = L.marker([47.583837, 12.171941], { icon: openIcon }).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
+var markerTwo = L.marker([47.583435, 12.172601], { icon: openIcon }).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
+var markerThree = L.marker([47.583674, 12.173288], { icon: openIcon }).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
+var markerFour = L.marker([47.584177, 12.172596], {icon: openIcon}).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
+var markerFive = L.marker([47.584260, 12.171722], {icon: openIcon}).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
+
+console.log(marker);
 
 
-var marker = L.marker([47.583837, 12.171941], { icon: openIcon }).bindPopup("do u know the wae?").addTo(mymap); //geolocation
-var markerTwo = L.marker([47.583435, 12.172601], { icon: openIcon }).bindPopup("do u know the wae?").addTo(mymap); //geolocation
-var markerThree = L.marker([47.583674, 12.173288], { icon: openIcon }).bindPopup("do u know the wae?").addTo(mymap); //geolocation
-var markerFour = L.marker([47.584177, 12.172596], {icon: openIcon}).bindPopup("do u know the wae?").addTo(mymap); //geolocation
-var markerFive = L.marker([47.584260, 12.171722], {icon: openIcon}).bindPopup("do u know the wae?").addTo(mymap); //geolocation
-
-
-function onLocationFound(e) {
-    var radius = e.accuracy / 4;
-
-    L.marker(e.latlng).addTo(map)
-        .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-    L.circle(e.latlng, radius).addTo(map);
+function getDistanceToString() {
+    if (marker != undefined) {
+        console.log(marker.latlng);
+    }
+    return "mymap.distanceTo(marker.latlng, markerFive.latlng);";
 }
 
-mymap.on('locationfound', onLocationFound);
-mymap.locate({setView: true, watch: true, minZoom: 18, maxZoom: 18});
+ // placeholders for the L.marker and L.circle representing user's current position and accuracy    
+ var current_position, current_accuracy;
 
+ function onLocationFound(e) {
+   // if position defined, then remove the existing position marker and accuracy circle from the map
+   if (current_position) {
+    mymap.removeLayer(current_position);
+    mymap.removeLayer(current_accuracy);
+   }
 
-function onLocationError(e) {
-    alert(e.message);
-}
+   var radius = e.accuracy / 2;
 
-mymap.on('locationerror', onLocationError);
+   current_position = L.marker(e.latlng).addTo(mymap)
+     .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+   current_accuracy = L.circle(e.latlng, radius).addTo(mymap);
+ }
+
+ function onLocationError(e) {
+   alert(e.message);
+ }
+
+ mymap.on('locationfound', onLocationFound);
+ mymap.on('locationerror', onLocationError);
+
+ // wrap map.locate in a function    
+ function locate() {
+    mymap.locate({setView: true, maxZoom: 18});
+ }
+
+ // call locate every 3 seconds... forever
+ setInterval(locate, 3000);
