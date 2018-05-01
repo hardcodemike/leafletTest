@@ -16,12 +16,13 @@ var LeafIcon = L.Icon.extend({
        popupAnchor:  [-3, -76]
     }
 });
+
 var openIcon = new LeafIcon({
     iconUrl: './leaflet/images/knuckles.png',
 });
 
 var doneIcon = new LeafIcon({
-    iconUrl: './leaflet/images/heart.jpeg',
+    iconUrl: './leaflet/images/done.png',
 });
 
 /*start lock map */
@@ -66,46 +67,74 @@ var ign = L.tileLayer('https://maps{s}.wien.gv.at/basemap/bmaporthofoto30cm/norm
 
 mymap.addLayer(ign);
 
-var marker = L.marker([47.583837, 12.171941], { icon: openIcon }).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
-var markerTwo = L.marker([47.583435, 12.172601], { icon: openIcon }).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
-var markerThree = L.marker([47.583674, 12.173288], { icon: openIcon }).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
-var markerFour = L.marker([47.584177, 12.172596], {icon: openIcon}).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
-var markerFive = L.marker([47.584260, 12.171722], {icon: openIcon}).bindPopup(getDistanceToString()).addTo(mymap); //geolocation
+var marker = L.marker([47.583837, 12.171941], { icon: openIcon }).bindPopup("Do you know the wae?").addTo(mymap); //geolocation
+var markerTwo = L.marker([47.583435, 12.172601], { icon: openIcon }).bindPopup("Do you know the wae?").addTo(mymap); //geolocation
+var markerThree = L.marker([47.583674, 12.173288], { icon: openIcon }).bindPopup("Do you know the wae?").addTo(mymap); //geolocation
+var markerFour = L.marker([47.584177, 12.172596], {icon: openIcon}).bindPopup("Do you know the wae?").addTo(mymap); //geolocation
+var markerFive = L.marker([47.584260, 12.171722], {icon: openIcon}).bindPopup("Do you know the wae?").addTo(mymap); //geolocation
 
-console.log(marker);
+var currentPositionMarks;
+var allMarkers = [marker, markerTwo, markerThree, markerFour, markerFive];
 
 
-function getDistanceToString() {
-    if (marker != undefined) {
-        console.log(marker.latlng);
+if (!navigator.geolocation) {
+    alert("no geolocation for you");
+} else {
+    function success(position) {
+        var here = L.latlng(position.coords.latitude, position.coords.longitude);
+        if (currentPositionMarks === undefined) {
+            currentPositionMarks = new L.marker(here).bindPopup("here is the way").addto(mymap);
+        } else {
+            currentPositionMarks.setLatLng(here);
+        }
+
+        if (here.distanceTo(marker) < 15.0) {
+            marker.setIcon(done);
+        }
+
+        if (here.distanceTo(markerTwo) < 15.0) {
+            marker.setIcon(done);
+        }
+
+        if (here.distanceTo(markerThree) < 15.0) {
+            marker.setIcon(done);
+        }
+
+        if (here.distanceTo(markerFour) < 15.0) {
+            marker.setIcon(done);
+        }
+
+        if (here.distanceTo(markerFive) < 15.0) {
+            marker.setIcon(done);
+        }
     }
-    return "mymap.distanceTo(marker.latlng, markerFive.latlng);";
+
+    function error(e) {
+        switch (e.code) {
+            case e.PERMISSION_DENIED:
+                console.log("Error: Permission denied");
+                break;
+            case e.POSITION_UNAVAILABLE:
+                console.log("Error: Position unavailable");
+                break;
+            case e.TIMEOUT:
+                console.log("Error: Timeout")
+                break;
+        }
+    }
+
+    var geo_optioins = {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 2000,
+        distanceFilter: 1
+    };
+
+    navWatch = navigator.geolocation.watchPosition(success, error, geo_options);
+    
+
 }
 
- // placeholders for the L.marker and L.circle representing user's current position and accuracy    
- var current_position, current_accuracy;
-
- function onLocationFound(e) {
-   // if position defined, then remove the existing position marker and accuracy circle from the map
-   if (current_position) {
-    mymap.removeLayer(current_position);
-    mymap.removeLayer(current_accuracy);
-   }
-
-   var radius = e.accuracy / 2;
-
-   current_position = L.marker(e.latlng).addTo(mymap)
-     .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-   current_accuracy = L.circle(e.latlng, radius).addTo(mymap);
- }
-
- function onLocationError(e) {
-   alert(e.message);
- }
-
- mymap.on('locationfound', onLocationFound);
- mymap.on('locationerror', onLocationError);
 
  // wrap map.locate in a function    
  function locate() {
