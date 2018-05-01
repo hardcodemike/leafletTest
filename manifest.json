@@ -1,0 +1,8 @@
+{
+    "name" : "Uganda Knuckles Map app",
+    "short_name" : "UKMA",
+    "start_url" : "index.html?launcher=true",
+    "theme_color" : "black",
+    "display" : "browser",
+    "orientation" : "portrait"
+}
